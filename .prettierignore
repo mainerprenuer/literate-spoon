@@ -1,0 +1,10 @@
+# Add files here to ignore them from prettier formatting
+tmp
+dist
+coverage
+build
+node_modules
+hasura/app/**
+*lock.json
+*lock.yaml
+.next

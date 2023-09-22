@@ -1,0 +1,38 @@
+name: 'Chromatic Web'
+
+on:
+  pull_request:
+    paths:
+      - libs/client/ui/**
+      - apps/web/**
+  push:
+    branches: ['main']
+    paths:
+      - libs/client/ui/**
+      - apps/web/**
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromatic-deployment:
+    needs: setup-environment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up environment and cache dependencies
+        uses: sebpalluel/ci/.github/actions/setup-environment@latest
+      - name: Install Libvips
+        run: sudo apt-get update && sudo apt-get install -y libvips-dev
+      - name: Publish to Chromatic
+        uses: chromaui/action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          projectToken: ${{ secrets.CHROMATIC_WEB_PROJECT_TOKEN }}
+          exitZeroOnChanges: true
+          onlyChanged: true
+          buildScriptName: build-storybook:web

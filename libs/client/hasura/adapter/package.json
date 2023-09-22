@@ -1,0 +1,5 @@
+{
+  "name": "@client/hasura/adapter",
+  "version": "0.0.1",
+  "type": "commonjs"
+}
